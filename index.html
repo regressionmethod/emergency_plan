@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Regression Rescue Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #20b2aa 0%, #008b8b 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .emergency-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .scenario-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .scenario-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #20b2aa;
+        }
+
+        .scenario-card.active {
+            border-color: #20b2aa;
+            background: rgba(32, 178, 170, 0.1);
+        }
+
+        .scenario-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scenario-icon {
+            font-size: 1.5rem;
+        }
+
+        .scenario-description {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+
+        .severity {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .severity.high {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .severity.medium {
+            background: #ffa726;
+            color: white;
+        }
+
+        .severity.low {
+            background: #66bb6a;
+            color: white;
+        }
+
+        .solution-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .solution-panel.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .solution-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .steps {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .steps li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #20b2aa;
+            position: relative;
+        }
+
+        .steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -15px;
+            top: 15px;
+            background: #20b2aa;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .step-action {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .warning-box {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .success-tip {
+            background: linear-gradient(45deg, #66bb6a, #4caf50);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .print-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #20b2aa, #008b8b);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(32, 178, 170, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .print-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(32, 178, 170, 0.4);
+        }
+
+        .quick-reference {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-ref-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .quick-ref-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .quick-ref-item:hover {
+            border-color: #20b2aa;
+            background: rgba(32, 178, 170, 0.05);
+        }
+
+        .cue-phrase {
+            font-weight: bold;
+            color: #20b2aa;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .scenario-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .print-button {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .print-button {
+                display: none;
+            }
+            
+            .scenario-card, .solution-panel, .quick-reference {
+                background: white;
+                box-shadow: none;
+                border: 1px solid #ddd;
+                page-break-inside: avoid;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚨 Emergency Regression Rescue Plan</h1>
+            <p class="subtitle">Stop spirals in their tracks — calm, clear, and effective</p>
+            <div class="emergency-badge">Value: $97 • Instant Access</div>
+        </div>
+
+        <div class="quick-reference">
+            <h2>🎯 Quick Reset Cues (Use These First)</h2>
+            <div class="quick-ref-grid">
+                <div class="quick-ref-item">
+                    <div class="cue-phrase">"Oops"</div>
+                    <div>Gentle interrupt cue</div>
+                </div>
+                <div class="quick-ref-item">
+                    <div class="cue-phrase">"Let's try again"</div>
+                    <div>Reset + redirect</div>
+                </div>
+                <div class="quick-ref-item">
+                    <div class="cue-phrase">"Breathe"</div>
+                    <div>For you AND your dog</div>
+                </div>
+                <div class="quick-ref-item">
+                    <div class="cue-phrase">Turn sideways</div>
+                    <div>Body language reset</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; color: white; margin-bottom: 30px; font-size: 1.8rem;">Choose Your Emergency Scenario</h2>
+
+        <div class="scenario-grid">
+            <div class="scenario-card" onclick="showSolution('barking')">
+                <div class="scenario-title">
+                    <span class="scenario-icon">🔊</span>
+                    Door Barking Meltdown
+                </div>
+                <div class="scenario-description">
+                    Doorbell rings, delivery arrives, or guests come over — your dog loses it completely and won't stop barking.
+                </div>
+                <span class="severity high">High Intensity</span>
+            </div>
+
+            <div class="scenario-card" onclick="showSolution('leash')">
+                <div class="scenario-title">
+                    <span class="scenario-icon">🐕</span>
+                    Leash Lunging Chaos
+                </div>
+                <div class="scenario-description">
+                    Your once-calm walker now pulls, lunges at dogs/people, or completely ignores you on walks.
+                </div>
+                <span class="severity high">High Intensity</span>
+            </div>
+
+            <div class="scenario-card" onclick="showSolution('accidents')">
+                <div class="scenario-title">
+                    <span class="scenario-icon">💧</span>
+                    Indoor Accidents Return
+                </div>
+                <div class="scenario-description">
+                    House-trained dog suddenly starts peeing or pooping inside, even right after being outside.
+                </div>
+                <span class="severity medium">Medium Intensity</span>
+            </div>
+
+            <div class="scenario-card" onclick="showSolution('jumping')">
+                <div class="scenario-title">
+                    <span class="scenario-icon">⬆️</span>
+                    Jumping & Overstimulation
+                </div>
+                <div class="scenario-description">
+                    Dog jumps on everyone, can't settle, spinning, zoomies at inappropriate times.
+                </div>
+                <span class="severity medium">Medium Intensity</span>
+            </div>
+
+            <div class="scenario-card" onclick="showSolution('recall')">
+                <div class="scenario-title">
+                    <span class="scenario-icon">🏃</span>
+                    Recall Failure
+                </div>
+                <div class="scenario-description">
+                    Dog ignores "come" command completely, runs away, or seems to have "selective hearing."
+                </div>
+                <span class="severity low">Low Intensity</span>
+            </div>
+
+            <div class="scenario-card" onclick="showSolution('destruction')">
+                <div class="scenario-title">
+                    <span class="scenario-icon">💥</span>
+                    Destructive Behavior
+                </div>
+                <div class="scenario-description">
+                    Chewing furniture, digging, destroying things when left alone or during stress.
+                </div>
+                <span class="severity medium">Medium Intensity</span>
+            </div>
+        </div>
+
+        <!-- Solution Panels -->
+        <div id="barking-solution" class="solution-panel">
+            <div class="solution-title">
+                <span>🔊</span>
+                Door Barking Emergency Reset
+            </div>
+            
+            <div class="warning-box">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <div>
+                    <strong>DO NOT:</strong> Yell "quiet," repeatedly say "no," or open the door while they're barking. This reinforces the chaos loop.
+                </div>
+            </div>
+
+            <ol class="steps">
+                <li>
+                    <div class="step-title">Interrupt with Body Language</div>
+                    <div class="step-action">Turn sideways, avoid eye contact, take 3 deep breaths. Do NOT face your dog directly.</div>
+                </li>
+                <li>
+                    <div class="step-title">Use Reset Cue</div>
+                    <div class="step-action">Say "Oops" in a calm, low tone. Wait 3 seconds for ANY pause in barking.</div>
+                </li>
+                <li>
+                    <div class="step-title">Redirect to Calm Zone</div>
+                    <div class="step-action">The moment they pause, say "Let's go" and guide them to their crate or mat using gentle leash pressure (no pulling).</div>
+                </li>
+                <li>
+                    <div class="step-title">Reward the Reset</div>
+                    <div class="step-action">Once in their calm zone, give quiet praise and a small treat. Stay calm yourself — no excited energy.</div>
+                </li>
+                <li>
+                    <div class="step-title">Wait Before Answering Door</div>
+                    <div class="step-action">Don't answer the door until your dog is settled. This teaches them that calm behavior opens doors, not barking.</div>
+                </li>
+            </ol>
+
+            <div class="success-tip">
+                <span style="font-size: 1.5rem;">✅</span>
+                <div>
+                    <strong>Success Tip:</strong> Practice this sequence when there's NO doorbell. Use the cue "Oops" → "Let's go" during calm moments so your dog learns the pattern without stress.
+                </div>
+            </div>
+        </div>
+
+        <div id="leash-solution" class="solution-panel">
+            <div class="solution-title">
+                <span>🐕</span>
+                Leash Lunging Emergency Reset
+            </div>
+            
+            <div class="warning-box">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <div>
+                    <strong>DO NOT:</strong> Jerk the leash back hard, yell, or keep walking toward the trigger. This escalates the reaction.
+                </div>
+            </div>
+
+            <ol class="steps">
+                <li>
+                    <div class="step-title">Stop and Turn</div>
+                    <div class="step-action">The moment you see tension in the leash, stop walking. Turn your body 90 degrees away from the trigger.</div>
+                </li>
+                <li>
+                    <div class="step-title">Create Distance</div>
+                    <div class="step-action">Say "Let's go" and walk in the opposite direction. Use steady, gentle leash pressure — no yanking.</div>
+                </li>
+                <li>
+                    <div class="step-title">Find Calm Space</div>
+                    <div class="step-action">Move to a spot where your dog can see the trigger but isn't reactive (usually 10-20 feet back).</div>
+                </li>
+                <li>
+                    <div class="step-title">Reset with Attention</div>
+                    <div class="step-action">Say your dog's name once. When they look at you, immediately say "Yes" and give a small treat.</div>
+                </li>
+                <li>
+                    <div class="step-title">Wait for Calm</div>
+                    <div class="step-action">Don't move forward until your dog's body language is relaxed. This might take 30 seconds to 2 minutes.</div>
+                </li>
+            </ol>
+
+            <div class="success-tip">
+                <span style="font-size: 1.5rem;">✅</span>
+                <div>
+                    <strong>Success Tip:</strong> Practice the "name → look → treat" sequence at home first. Your dog needs to know this cue works BEFORE you use it during stress.
+                </div>
+            </div>
+        </div>
+
+        <div id="accidents-solution" class="solution-panel">
+            <div class="solution-title">
+                <span>💧</span>
+                Indoor Accident Emergency Reset
+            </div>
+            
+            <div class="warning-box">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <div>
+                    <strong>DO NOT:</strong> Scold, rub their nose in it, or show frustration. Accidents during regression are stress responses, not defiance.
+                </div>
+            </div>
+
+            <ol class="steps">
+                <li>
+                    <div class="step-title">Stay Calm</div>
+                    <div class="step-action">Take a deep breath. Your energy sets the tone. If you're stressed, your dog will absorb that.</div>
+                </li>
+                <li>
+                    <div class="step-title">Clean Without Drama</div>
+                    <div class="step-action">Use enzyme cleaner to remove all scent traces. Do this calmly — don't make it a big event.</div>
+                </li>
+                <li>
+                    <div class="step-title">Reset the Schedule</div>
+                    <div class="step-action">Take your dog out every 2 hours for the next 3 days, even if they don't seem to need it.</div>
+                </li>
+                <li>
+                    <div class="step-title">Supervised Freedom Only</div>
+                    <div class="step-action">Keep your dog in the same room as you. If you can't supervise, use crate or tether them near you.</div>
+                </li>
+                <li>
+                    <div class="step-title">Reward Outdoor Success</div>
+                    <div class="step-action">The moment they go outside, give immediate praise and a treat. Make outdoor elimination the best thing ever.</div>
+                </li>
+            </ol>
+
+            <div class="success-tip">
+                <span style="font-size: 1.5rem;">✅</span>
+                <div>
+                    <strong>Success Tip:</strong> Accidents often spike during schedule changes or stress. Return to a puppy-like schedule temporarily — it's not permanent.
+                </div>
+            </div>
+        </div>
+
+        <div id="jumping-solution" class="solution-panel">
+            <div class="solution-title">
+                <span>⬆️</span>
+                Jumping & Overstimulation Emergency Reset
+            </div>
+            
+            <div class="warning-box">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <div>
+                    <strong>DO NOT:</strong> Push them down, knee them, or give attention (even negative attention). This often makes jumping worse.
+                </div>
+            </div>
+
+            <ol class="steps">
+                <li>
+                    <div class="step-title">Remove Your Attention</div>
+                    <div class="step-action">Turn your back, cross your arms, and look up at the ceiling. Become "boring" immediately.</div>
+                </li>
+                <li>
+                    <div class="step-title">Wait for Four Paws</div>
+                    <div class="step-action">Don't turn around until all four paws are on the ground for at least 3 seconds.</div>
+                </li>
+                <li>
+                    <div class="step-title">Reward Calm</div>
+                    <div class="step-action">The moment they're calm, turn around and say "Yes" in a quiet voice. Give attention or treats only when they're settled.</div>
+                </li>
+                <li>
+                    <div class="step-title">Practice Calm Greetings</div>
+                    <div class="step-action">Have family members practice coming through the door calmly. Reset every time jumping starts.</div>
+                </li>
+                <li>
+                    <div class="step-title">Create a Landing Spot</div>
+                    <div class="step-action">Teach your dog to go to a specific mat or area when people enter. Practice this during calm moments first.</div>
+                </li>
+            </ol>
+
+            <div class="success-tip">
+                <span style="font-size: 1.5rem;">✅</span>
+                <div>
+                    <strong>Success Tip:</strong> Jumping is usually attention-seeking or overstimulation. Lower your energy when you come home — calm hellos create calm dogs.
+                </div>
+            </div>
+        </div>
+
+        <div id="recall-solution" class="solution-panel">
+            <div class="solution-title">
+                <span>🏃</span>
+                Recall Failure Emergency Reset
+            </div>
+            
+            <div class="warning-box">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <div>
+                    <strong>DO NOT:</strong> Repeat "come" multiple times, chase your dog, or use an angry voice. This teaches them that "come" is optional.
+                </div>
+            </div>
+
+            <ol class="steps">
+                <li>
+                    <div class="step-title">Stop Repeating the Cue</div>
+                    <div class="step-action">Say "come" once in a happy voice. If they don't respond within 5 seconds, don't repeat it.</div>
+                </li>
+                <li>
+                    <div class="step-title">Make Yourself Interesting</div>
+                    <div class="step-action">Run in the opposite direction, clap your hands, or make exciting noises. Don't chase — make them chase YOU.</div>
+                </li>
+                <li>
+                    <div class="step-title">Use Environmental Help</div>
+                    <div class="step-action">If possible, move toward a door, car, or treat bag. Use things your dog already wants to come to.</div>
+                </li>
+                <li>
+                    <div class="step-title">Reward Any Movement</div>
+                    <div class="step-action">The moment they take a step toward you, say "Yes!" enthusiastically. Reward partial success.</div>
+                </li>
+                <li>
+                    <div class="step-title">Practice in Boring Places</div>
+                    <div class="step-action">For the next week, only practice recall in low-distraction areas where success is guaranteed.</div>
+                </li>
+            </ol>
+
+            <div class="success-tip">
+                <span style="font-size: 1.5rem;">✅</span>
+                <div>
+                    <strong>Success Tip:</strong> Recall fails when it competes with something more interesting. Make coming to you the BEST thing that happens to your dog.
+                </div>
+            </div>
+        </div>
+
+        <div id="destruction-solution" class="solution-panel">
+            <div class="solution-title">
+                <span>💥</span>
+                Destructive Behavior Emergency Reset
+            </div>
+            
+            <div class="warning-box">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <div>
+                    <strong>DO NOT:</strong> Punish after the fact, leave tempting items out, or assume it's spite. Destruction is usually anxiety or boredom.
+                </div>
+            </div>
+
+            <ol class="steps">
+                <li>
+                    <div class="step-title">Interrupt Calmly</div>
+                    <div class="step-action">If you catch them in the act, say "Oops" and redirect to an appropriate chew toy immediately.</div>
+                </li>
+                <li>
+                    <div class="step-title">Remove Temptation</div>
+                    <div class="step-action">Put away shoes, remotes, cushions — anything they might destroy. Management prevents bad habits from forming.</div>
+                </li>
+                <li>
+                    <div class="step-title">Provide Legal Outlets</div>
+                    <div class="step-action">Give them puzzle toys, frozen Kongs, or appropriate chews. Tired mouths don't destroy furniture.</div>
+                </li>
+                <li>
+                    <div class="step-title">Increase Supervision</div>
+                    <div class="step-action">Keep them in the same room as you. Use baby gates or tethers if needed. Prevent practice of bad behavior.</div>
+                </li>
+                <li>
+                    <div class="step-title">Address the Root Cause</div>
+                    <div class="step-action">Increase physical exercise, mental stimulation, or consider if separation anxiety is the trigger.</div>
+                </li>
+            </ol>
+
+            <div class="success-tip">
+                <span style="font-size: 1.5rem;">✅</span>
+                <div>
+                    <strong>Success Tip:</strong> Most destruction happens in the first 20 minutes alone or when dogs are understimulated. Tire them out before leaving.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="print-button" onclick="window.print()">
+        🖨️ Print This Guide
+    </button>
+
+    <script>
+        function showSolution(scenarioType) {
+            // Hide all solution panels
+            const allPanels = document.querySelectorAll('.solution-panel');
+            allPanels.forEach(panel => {
+                panel.classList.remove('active');
+            });
+
+            // Remove active class from all cards
+            const allCards = document.querySelectorAll('.scenario-card');
+            allCards.forEach(card => {
+                card.classList.remove('active');
+            });
+
+            // Show selected solution panel
+            const selectedPanel = document.getElementById(scenarioType + '-solution');
+            if (selectedPanel) {
+                selectedPanel.classList.add('active');
+                
+                // Add active class to clicked card
+                event.target.closest('.scenario-card').classList.add('active');
+                
+                // Scroll to solution panel
+                selectedPanel.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.scenario-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('active')) {
+                    this.style.transform = 'translateY(0)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
